@@ -1,6 +1,5 @@
 from database import Base
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey
-from sqlalchemy.sql import func
+from sqlalchemy import Column, Integer, String, Boolean, TIMESTAMP, ForeignKey
 
 
 class Users(Base):
@@ -9,8 +8,8 @@ class Users(Base):
   id = Column(Integer, primary_key=True, index=True)
   name = Column(String, unique=True)
   email = Column(String, unique=True)
-  createAt = Column(DateTime, default=func.now())
-  photoUrl = Column(String)
+  created_at = Column(TIMESTAMP)
+  photo_url = Column(String)
   hashed_password = Column(String)
   is_active = Column(Boolean, default=True)
   role = Column(String)
@@ -24,5 +23,5 @@ class Todos(Base):
   description = Column(String)
   complete = Column(Boolean, default=False)
   category_id = Column(String)
-  date = Column(DateTime, default=func.now())
+  created_at = Column(TIMESTAMP)
   owner_id = Column(Integer, ForeignKey("users.id"))
