@@ -25,7 +25,6 @@ class TodoRequest(BaseModel):
   description: str = Field(min_length=3, max_length=100)
   complete: bool
   category_id: str
-  date: None
 
 
 @router.get("/", status_code=status.HTTP_200_OK)
@@ -73,7 +72,6 @@ async def update_todo(user: user_dependency, db: db_dependency, todo_request: To
   todo_model.description = todo_request.description
   todo_model.complete = todo_request.complete
   todo_model.category_id = todo_request.category_id
-  todo_model.date = todo_request.date
   db.add(todo_model)
   db.commit()
 
