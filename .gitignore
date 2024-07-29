@@ -1,1 +1,7 @@
 /serene_track_env/
+*.pyc
+__init__.py
+/alembic/
+alembic.ini
+.idea/**
+Pipfile
