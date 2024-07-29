@@ -25,6 +25,8 @@ class CreateUserRequest(BaseModel):
   name: str
   email: str
   photo_url: str
+  short_term_goal: str
+  long_term_goal: str
   password: str
   role: str
 
@@ -77,16 +79,18 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]):
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_user(db: db_dependency,
-                      create_user_request: CreateUserRequest):
+async def create_user(db: db_dependency, create_user_request: CreateUserRequest):
   create_user_model = Users(
     name=create_user_request.name,
     email=create_user_request.email,
     created_at=datetime.now(timezone.utc),
     photo_url=create_user_request.photo_url,
+    short_term_goal=create_user_request.short_term_goal,
+    long_term_goal=create_user_request.long_term_goal,
     hashed_password=bcrypt_context.hash(create_user_request.password),
     role=create_user_request.role,
-    is_active=True
+    is_active=True,
+    health_data_integration_status=False,
   )
   
   db.add(create_user_model)
@@ -100,6 +104,6 @@ async def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm,
   if not user:
     raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,
                           detail='Could not validate user.')
-  token = create_access_token(user.name, user.id, user.role, timedelta(minutes=20))
+  token = create_access_token(user.name, user.id, user.role, timedelta(minutes=30))
 
   return {'access_token': token, 'token_type': 'bearer'}
