@@ -2,7 +2,7 @@ import json
 from typing import Annotated
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
-from fastapi import APIRouter, Depends, HTTPException, Path
+from fastapi import APIRouter, Depends, HTTPException, Path, Form
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from models import Users
 from starlette import status
@@ -42,11 +42,16 @@ class InputUserInformation(BaseModel):
     password: str
 
 
-class updateUserInformation(BaseModel):
+class UpdateUserInformation(BaseModel):
     name: str
-    photo_url: str
     short_term_goal: str
     long_term_goal: str
+
+class UpdateUserIcon(BaseModel):
+    photo_url: str
+
+
+class UpdateUserHealthStatus(BaseModel):
     health_data_integration_status: bool
 
 
@@ -143,23 +148,54 @@ async def change_password(user: user_dependency, db: db_dependency, change_passw
     db.commit()
 
 
-@router.put("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def update_user(db: db_dependency, update_user_information: updateUserInformation, user_id: int = Path(gt=0)):
-    # if user is None:
-    #     raise HTTPException(status_code=401, detail='Authentication Failed')
+@router.put("/{user_id}", status_code=status.HTTP_200_OK)
+async def update_user(db: db_dependency, name: str = Form(...), short_term_goal: str = Form(...), long_term_goal: str = Form(...), user_id: int = Path(gt=0)):
 
     user_model = db.query(Users).filter(Users.id == user_id).first()
     if user_model is None:
         raise HTTPException(status_code=401, detail='Authentication Failed')
 
-    user_model.name = update_user_information.name
-    user_model.photo_url = update_user_information.photo_url
-    user_model.short_term_goal = update_user_information.short_term_goal
-    user_model.long_term_goal = update_user_information.long_term_goal
-    user_model.health_data_integration_status = update_user_information.health_data_integration_status
+    user_model.name = name
+    user_model.short_term_goal = short_term_goal
+    user_model.long_term_goal = long_term_goal
 
     db.add(user_model)
     db.commit()
+    db.refresh(user_model)
+
+    return user_model
+
+
+@router.put("/user_icon/{user_id}", status_code=status.HTTP_200_OK)
+async def update_user_icon(db: db_dependency, photo_url: str = Form(...), user_id: int = Path(gt=0)):
+
+    user_model = db.query(Users).filter(Users.id == user_id).first()
+    if user_model is None:
+        raise HTTPException(status_code=401, detail='Authentication Failed')
+
+    user_model.photo_url = photo_url
+
+    db.add(user_model)
+    db.commit()
+    db.refresh(user_model)
+
+    return user_model
+
+
+@router.put("/health_care/{user_id}", status_code=status.HTTP_200_OK)
+async def update_health_data_integration_status(db: db_dependency, health_data_integration_status: bool = Form(...), user_id: int = Path(gt=0)):
+
+    user_model = db.query(Users).filter(Users.id == user_id).first()
+    if user_model is None:
+        raise HTTPException(status_code=401, detail='Authentication Failed')
+
+    user_model.health_data_integration_status = health_data_integration_status
+
+    db.add(user_model)
+    db.commit()
+    db.refresh(user_model)
+
+    return user_model
 
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
