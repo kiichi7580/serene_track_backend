@@ -27,6 +27,6 @@ class Todos(Base):
   description = Column(String)
   complete = Column(Boolean, default=False)
   category_id = Column(String)
-  notification_time = Column(TIMESTAMP)
+  # notification_time = Column(TIMESTAMP)
   created_at = Column(TIMESTAMP)
   owner_id = Column(Integer, ForeignKey("users.id"))
