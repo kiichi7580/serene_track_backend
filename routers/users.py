@@ -41,20 +41,6 @@ class InputUserInformation(BaseModel):
     email: str
     password: str
 
-
-class UpdateUserInformation(BaseModel):
-    name: str
-    short_term_goal: str
-    long_term_goal: str
-
-class UpdateUserIcon(BaseModel):
-    photo_url: str
-
-
-class UpdateUserHealthStatus(BaseModel):
-    health_data_integration_status: bool
-
-
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_user(user: user_dependency, db: db_dependency):
     if user is None:
