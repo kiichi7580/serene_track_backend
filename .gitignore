@@ -5,5 +5,4 @@ __init__.py
 alembic.ini
 .idea/**
 Pipfile
-.env.development
-.env.production
+.env

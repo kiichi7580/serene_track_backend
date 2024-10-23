@@ -4,14 +4,8 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from dotenv import load_dotenv
 
-# 環境を取得 (デフォルトは development)
-env = os.getenv('ENV', 'development')
-
-# 環境ごとの .env ファイルを読み込む
-if env == 'development':
-    load_dotenv(dotenv_path='.env.development')
-elif env == 'production':
-    load_dotenv(dotenv_path='.env.production')
+# 環境を取得
+env = os.getenv('ENV')
 
 # データベースURLを取得
 SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL')
