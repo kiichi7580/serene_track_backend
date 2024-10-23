@@ -5,12 +5,14 @@ from models import Todos
 from starlette import status
 from database import SessionLocal
 from .auth import get_current_user
+from contextlib import contextmanager
 
 router = APIRouter(
   prefix='/admin',
   tags=['admin']
 )
 
+@contextmanager
 def get_db():
   db = SessionLocal()
   try:

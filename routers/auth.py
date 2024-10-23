@@ -9,6 +9,7 @@ from starlette import status
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from jose import jwt, JWTError
 from datetime import timedelta, datetime, timezone
+from contextlib import contextmanager
 
 router = APIRouter(
   prefix='/auth',
@@ -36,6 +37,7 @@ class Token(BaseModel):
   token_type: str
 
 
+@contextmanager
 def get_db():
   db = SessionLocal()
   try:

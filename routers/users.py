@@ -10,12 +10,14 @@ from database import SessionLocal
 from .auth import get_current_user, CreateUserRequest, authenticate_user, create_access_token, Token
 from passlib.context import CryptContext
 from datetime import datetime, timezone, timedelta
+from contextlib import contextmanager
 
 router = APIRouter(
   prefix='/user',
   tags=['user'],
 )
 
+@contextmanager
 def get_db():
   db = SessionLocal()
   try:
