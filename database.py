@@ -10,10 +10,14 @@ env = os.getenv('ENV')
 # データベースURLを取得
 SQLALCHEMY_DATABASE_URL = os.getenv('DATABASE_URL')
 
+# スキーマを取得
+schema = os.getenv('SCHEMA')
+
 print(f'現在の環境は {env} です')
 print(f'DATABASE_URL: {SQLALCHEMY_DATABASE_URL}')
+print(f'スキーマは {env} です')
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={'options': '-csearch_path=serene_track'})
+engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={'options': f'-csearch_path={schema}'})
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
