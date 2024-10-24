@@ -7,11 +7,10 @@ from starlette import status
 from database import SessionLocal
 from .auth import get_current_user
 from datetime import datetime, timezone
-from contextlib import contextmanager
 
 router = APIRouter()
 
-@contextmanager
+
 def get_db():
   db = SessionLocal()
   try:

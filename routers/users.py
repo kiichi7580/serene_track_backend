@@ -10,20 +10,18 @@ from database import SessionLocal
 from .auth import get_current_user, CreateUserRequest, authenticate_user, create_access_token, Token
 from passlib.context import CryptContext
 from datetime import datetime, timezone, timedelta
-from contextlib import contextmanager
 
 router = APIRouter(
-  prefix='/user',
-  tags=['user'],
+    prefix='/user',
+    tags=['user'],
 )
 
-@contextmanager
 def get_db():
-  db = SessionLocal()
-  try:
-    yield db
-  finally:
-    db.close()
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 db_dependency = Annotated[Session, Depends(get_db)]
 user_dependency = Annotated[dict, Depends(get_current_user)]
@@ -38,10 +36,10 @@ class ChangePassword(BaseModel):
     password: str
     new_password: str = Field(min_length=6)
 
-
 class InputUserInformation(BaseModel):
     email: str
     password: str
+
 
 @router.get("/", status_code=status.HTTP_200_OK)
 async def get_user(user: user_dependency, db: db_dependency):
